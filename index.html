@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta para Lorena</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ebafa7, #d89e94);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Estilos para las estrellas */
+.star {
+    position: fixed;
+    background-color: white;
+    border-radius: 1000%;
+    pointer-events: none;
+    z-index: 0;
+    animation: twinkle var(--duration) infinite ease-in-out;
+    opacity: 0;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+.star {
+    /* Cambia estos valores para hacerlas más grandes */
+    width: 1000px;  /* Tamaño original: 3px */
+    height: 1000px; /* Tamaño original: 3px */
+    /* Resto del código... */
+}
+
+.star::before, 
+.star::after {
+    width: 50px;  /* Aumenta proporcionalmente */
+    height: 50px; /* Aumenta proporcionalmente */
+}
+
+
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+        }
+
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .envelope-front {
+            background: #e74c3c;
+            clip-path: polygon(
+                0% 0%,
+                100% 0%,
+                100% 80%,
+                50% 100%,
+                0% 80%
+            );
+            z-index: 3;
+            transform-origin: top;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .envelope-back {
+            background: #c0392b;
+            clip-path: polygon(
+                0% 0%,
+                100% 0%,
+                100% 100%,
+                0% 100%
+            );
+            z-index: 1;
+            top: 0;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #e74c3c;
+            clip-path: polygon(
+                0% 0%,
+                100% 0%,
+                50% 50%
+            );
+            z-index: 4;
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .letter {
+            position: absolute;
+            width: 90%;
+            height: 180px;
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 2;
+            top: 10px;
+            left: 5%;
+            transition: all 0.5s ease-in-out 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            overflow-y: auto;
+        }
+
+        .letter-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .letter h2 {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .heart {
+            color: #e74c3c;
+            font-size: 24px;
+            text-align: center;
+            margin-top: 10px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Efecto cuando se abre */
+        .open .envelope-front {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .open .letter {
+            transform: translateY(-150px);
+            height: 200px;
+            transition-delay: 0s;
+        }
+
+        /* Efecto de sello */
+        .stamp {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 50px;
+            height: 50px;
+            background: #f1c40f;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            transform: rotate(15deg);
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            z-index: 10;
+        }
+        .instruction {
+    position: fixed;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+    100% { transform: translateX(-50%) scale(1); }
+}
+    </style>
+</head>
+<body>
+    
+    <div class="instruction">Dale click a la carta para abrirla</div>    
+    <div class="envelope-container" id="envelope">
+        <div class="stamp">Para ti</div>
+        <div class="envelope envelope-front"></div>
+        <div class="envelope envelope-back"></div>
+
+        <div class="letter">
+            <div class="letter-content">
+                <h2>¡Feliz Cumpleaños Lorena!</h2>
+                <p>Hola Lorena,</p>
+                <p>Quería aprovechar este día especial para desearte un muy feliz cumpleaños. Espero que este nuevo año de vida te traiga mucha felicidad, salud y éxitos en todo lo que te propongas.</p>
+                <p>¡Que tengas un excelente año!</p>
+                <div class="heart">❤</div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+
+        const envelope = document.getElementById('envelope');
+        let isOpen = false;
+
+        envelope.addEventListener('click', function() {
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                this.classList.add('open');
+                createConfetti();
+            } else {
+                this.classList.remove('open');
+            }
+        });
+
+        function createConfetti() {
+            const colors = ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -10 + 'px';
+                confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                document.body.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3 + 2;
+                
+                confetti.animate([
+                    { top: -10 + 'px', opacity: 1 },
+                    { top: 100 + 'vh', opacity: 0 }
+                ], {
+                    duration: animationDuration * 1000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.9, 1)',
+                    fill: 'forwards'
+                });
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, animationDuration * 1000);
+            }
+        }
+
+        // Crear estrellas
+function createStars() {
+    const starsContainer = document.body;
+    const starsCount = 50; // Cantidad de estrellas
+    
+    for (let i = 0; i < starsCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Tamaño aleatorio entre 1 y 3px
+        const size = Math.random() * 2 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        
+        // Posición aleatoria en la pantalla
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.top = `${Math.random() * 100}vh`;
+        
+        // Duración de animación aleatoria
+        star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+        
+        // Retraso inicial aleatorio
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        
+        starsContainer.appendChild(star);
+    }
+    
+}
+
+
+// Llamar a la función cuando se cargue la página
+window.addEventListener('load', createStars);
+
+
+
+    </script>
+</body>
+</html>
